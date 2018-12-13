@@ -1,8 +1,4 @@
-//#include "stdafx.h"
-
-// http://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=136
-
-//#include "UVa200.h"
+//22441720
 
 #include <iostream>
 #include <vector>
@@ -13,98 +9,105 @@
 
 using namespace std;
 
-void UVa200_dfs(int current, vector<int>& colors, vector<set<int> > adjacency_list, stack<int>& finishing_order);
+void dfs(int atual, vector<int> &cores, vector<set<int>> lista_adjacencia, stack<int> &ordem);
 
 int main()
 {
-    // Step 1: Read input
-    string line;
-    vector<string> index;
-    while (true)
+    // Passo 1: Lendo entrada
+    string linha;
+    vector<string> indice;
+    linha = "!";
+    
+    while (linha != " ")
     {
-        getline(cin, line);
-        if (line == "#")
+        getline(cin, linha);
+        if (linha == "#")
         {
-            break;
-        }
-        index.push_back(line);
-    }
-
-    // Step 2: Numbering the characters
-    map<char, int> numbering;
-    map<int, char> naming;
-
-    for (unsigned int i = 0; i < index.size(); i++)
-    {
-        string s = index[i];
-        for (unsigned int c = 0; c < s.length(); c++)
-        {
-            if (numbering.find(s[c]) == numbering.end())
-            {   
-                int n = numbering.size();
-                numbering.insert(pair<char, int>(s[c], n));
-                naming.insert(pair<int, char>(n, s[c]));
-            }
-        }
-    }
-
-    // Step 3: Build the precedence graph
-    int number_of_nodes = numbering.size();
-    vector<set<int> > adjacency_list;
-    adjacency_list.resize(number_of_nodes);
-
-    for (unsigned int i = 1; i < index.size(); i++)
-    {
-        string prev = index[i - 1];
-        string next = index[i];
-        for (unsigned int c = 0; c < prev.length() && c < next.length(); c++)
-        {
-            if (prev[c] != next[c])
+            
+            // Passo 2: numerando os caracteres
+            map<char, int> numerando;
+            map<int, char> nomeando;
+        
+            
+            for (unsigned int i = 0; i < indice.size(); i++)
             {
-                adjacency_list[numbering[prev[c]]].insert(numbering[next[c]]);
-                break;
+                string s = indice[i];
+                for (unsigned int c = 0; c < s.length(); c++)
+                {   
+                   
+                    if (numerando.find(s[c]) == numerando.end())
+                    {
+                        int n = numerando.size();
+                        numerando.insert(pair<char, int>(s[c], n));
+                        nomeando.insert(pair<int, char>(n, s[c]));
+                    }
+                }
+                
             }
+        
+            // Passo 3: Controi grafico de precedencia
+            int num_nos = numerando.size();
+            vector<set<int>> lista_adjacencia;
+            lista_adjacencia.resize(num_nos);
+        
+            for (unsigned int i = 1; i < indice.size(); i++)
+            {
+                string ant = indice[i - 1];
+                string prox = indice[i];
+                for (unsigned int c = 0; c < ant.length() && c < prox.length(); c++)
+                {
+                    if (ant[c] != prox[c])
+                    {
+                        lista_adjacencia[numerando[ant[c]]].insert(numerando[prox[c]]);
+                        break;
+                    }
+                }
+            }
+        
+            // Passo 4: DFS para ordenação topologica
+            vector<int> cores;
+            stack<int> ordem;
+            cores.resize(num_nos);
+            for (int i = 0; i < num_nos; i++)
+            {
+                cores[i] = 0;
+            }
+        
+            for (int i = 0; i < num_nos; i++)
+            {
+                if (cores[i] == 0)
+                {
+                    dfs(i, cores, lista_adjacencia, ordem);
+                }
+            }
+        
+            while (ordem.size() > 0)
+            {
+                printf("%s\n", nomeando[ordem.top()]);
+                ordem.pop();
+            }
+            indice.clear();
+            getline(cin, linha);
+            printf("%s\n", endl);
+            
         }
+        indice.push_back(linha);
     }
-
-    // Step 4: DFS for topological sort
-    vector<int> colors;
-    stack<int> finishing_order;
-    colors.resize(number_of_nodes);
-    for (int i = 0; i < number_of_nodes; i++)
-    {
-        colors[i] = 0;
-    }
-
-    for (int i = 0; i < number_of_nodes; i++)
-    {
-        if (colors[i] == 0)
-        {
-            UVa200_dfs(i, colors, adjacency_list, finishing_order);
-        }
-    }
-
-    while (finishing_order.size() > 0)
-    {
-        cout << naming[finishing_order.top()];
-        finishing_order.pop();
-    }
-    cout << endl;
-
+     
     return 0;
 }
 
-void UVa200_dfs(int current, vector<int>& colors, vector<set<int> > adjacency_list, stack<int>& finishing_order)
+void dfs(int atual, vector<int> &cores, vector<set<int>> lista_adjacencia, stack<int> &ordem)
 {
-    colors[current] = 1;
-    for (set<int>::iterator ni = adjacency_list[current].begin(); ni != adjacency_list[current].end(); ni++)
+    cores[atual] = 1;
+    for (set<int>::iterator ni = lista_adjacencia[atual].begin(); ni != lista_adjacencia[atual].end(); ni++)
     {
-        int neighbor = *ni;
-        if (colors[neighbor] == 0)
+        int vizinho = *ni;
+        if (cores[vizinho] == 0)
         {
-            UVa200_dfs(neighbor, colors, adjacency_list, finishing_order);
+            dfs(vizinho, cores, lista_adjacencia, ordem);
         }
     }
-    colors[current] = 2;
-    finishing_order.push(current);
+    cores[atual] = 2;
+    ordem.push(atual);
 }
