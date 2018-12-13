@@ -83,12 +83,12 @@ int main()
         
             while (ordem.size() > 0)
             {
-                printf("%s\n", nomeando[ordem.top()]);
+                cout << nomeando[ordem.top()];
                 ordem.pop();
             }
             indice.clear();
             getline(cin, linha);
-            printf("%s\n", endl);
+            cout << endl;
             
         }
         indice.push_back(linha);
