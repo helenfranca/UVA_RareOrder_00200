@@ -1,11 +1,5 @@
 //22441819
 
-//#include "stdafx.h"
-
-// http://uva.onlinejudge.org/indice.php?option=onlinejudge&page=show_problem&problem=136
-
-//#include "UVa200.h"
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -20,16 +14,16 @@ void dfs(int atual, vector<int> &cores, vector<set<int>> lista_adjacencia, stack
 int main()
 {
     // Step 1: Lendo entrada
-    string line;
+    string linha;
     vector<string> indice;
     while (true)
     {
-        getline(cin, line);
+        getline(cin, linha);
         if (line == "#")
         {
             break;
         }
-        indice.push_back(line);
+        indice.push_back(linha);
     }
 
     // Step 2: numerando os caracteres
