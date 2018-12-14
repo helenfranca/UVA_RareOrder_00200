@@ -19,7 +19,7 @@ int main()
     while (true)
     {
         getline(cin, linha);
-        if (line == "#")
+        if (linha == "#")
         {
             break;
         }
@@ -87,8 +87,8 @@ int main()
         cout << nomeando[ordem.top()];
         ordem.pop();
     }
+    
     cout << endl;
-
     return 0;
 }
 
